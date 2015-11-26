@@ -1,0 +1,24 @@
+{
+  "name": "slickslackslow",
+  "version": "1.0.0",
+  "description": "Tic tac toe. There are many like it but this one is mine.",
+  "main": "index.js",
+  "scripts": {
+    "start": "./server.js",
+    "test": "mocha"
+  },
+  "keywords": [
+    "game",
+    "tictactoe",
+    "two-player"
+  ],
+  "author": "Zach Rose",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "cookie-parser": "^1.4.0",
+    "express": "^4.13.3",
+    "express-ws": "^0.2.6",
+    "tic-tac-toe-js": "0.0.2"
+  }
+}
