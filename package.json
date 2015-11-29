@@ -1,0 +1,17 @@
+{
+  "name": "tictactoe",
+  "description": "Multiplayer TicTacToe for the browser",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.3",
+    "mocha": "^2.3.4",
+    "should": "^7.1.1"
+  }
+}
