@@ -21,18 +21,24 @@ var determineSide = require('./lib/side');
 var matches = require('./lib/matches');
 var present = require('./lib/presenter');
 
+app.all('/matches*', function(req, res, next){
+    res.represent = function(match, player){
+        res.format({
+            json: function(){
+                res.send(match);
+            },
+            html: function(){
+                res.render('match', present(match, player));
+            }
+        });
+    };
+    next();
+});
+
 app.post('/matches', function(req, res){
     var player = req.sessionID;
     var match = matches.createOrJoin(player);
-    // if(err) return res.status(500).send();
-    res.format({
-        json: function(){
-            res.send(match);
-        },
-        html: function(){
-            res.render('match', present(match, player));
-        }
-    });
+    res.represent(match, player);
 });
 
 app.get('/matches/:id', function(req, res){
@@ -40,14 +46,7 @@ app.get('/matches/:id', function(req, res){
     var id = req.params.id;
     var match = matches.find(id);
     if(!match) return res.status(404).send({ message: "No such game" });
-    res.format({
-        json: function(){
-            res.send(match);
-        },
-        html: function(){
-            res.render('match', present(match, player));
-        }
-    });
+    res.represent(match, player);
 });
 
 app.patch('/matches/:id', function(req, res){
@@ -64,14 +63,7 @@ app.patch('/matches/:id', function(req, res){
         var message = theirs ? e.message : "Internal error";
         return res.status(status).send({ message: message });
     }
-    res.format({
-        json: function(){
-            res.send(match);
-        },
-        html: function(){
-            res.render('match', present(match, player));
-        }
-    });
+    res.represent(match, player);
 });
 
 module.exports = app;
