@@ -1,0 +1,11 @@
+extends layout
+
+block json
+    script!= 'window.match = '+json
+
+block board
+    div#board
+        each square, index in board
+            div(id='s#{index}', class='square')= square
+    
+
