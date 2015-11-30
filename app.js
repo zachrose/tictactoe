@@ -1,4 +1,5 @@
 var path = require('path');
+var _ = require('underscore');
 var express = require('express');
 var bodyParser = require('body-parser');
 var session = require('express-session');
@@ -18,6 +19,12 @@ app.set('view engine', 'jade');
 
 var matches = require('./lib/matches');
 var present = require('./lib/presenter');
+
+var determineSide = function(player, match){
+    if(!match) return;
+    if(player == match.player_x) return 'x';
+    if(player == match.player_o) return 'o';
+};
 
 app.post('/matches', function(req, res){
     var player = req.sessionID;
@@ -52,18 +59,10 @@ app.patch('/matches/:id', function(req, res){
     var player = req.sessionID;
     var id = req.params.id;
     var match = matches.find(id);
+    var side = determineSide(player, match);
     if(!match) return res.status(404).send({ message: "No such game" });
-    var side;
-    console.log('assigning side to player', player, match);
-    if(player == match.player_x){
-        side = 'x';
-    }else if(player == match.player_o){
-        side = 'o';
-    }else{
-        return res.status(401).send({ message: "Not your game" });
-    }
-    var move = req.body;
-    move.side = side;
+    if(!side) return res.status(401).send({ message: "Not your game" });
+    var move = _.extend(req.body, { side: side });
     var match = matches.makeMove(id, move);
     res.format({
         json: function(){
