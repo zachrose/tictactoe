@@ -4,13 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>title</title>
-    <link rel="stylesheet" href="stylesheet.css" type="text/css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/superagent/1.2.0/superagent.min.js"></script>
   </head>
   <body>
-    <script type="text/javascript">
-    if (document.addEventListener) document.addEventListener("DOMContentLoaded", autorun, false);
-    else if (document.attachEvent) document.attachEvent("onreadystatechange", autorun);
-    else window.onload = autorun;
+    <h1>Lobby</h1>
+    <script>
+      superagent.post('/matches').end(function(err, res){
+        console.log('res', res.body);
+        var id = res.body.id;
+        var url = '/matches/'+id;
+        document.write("redirecting to "+url+" in a second");
+        setTimeout(function(){
+          window.location = url;
+        }, 300);
+      });
     </script>
   </body>
 </html>

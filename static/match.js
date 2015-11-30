@@ -1,8 +1,17 @@
 var move = function(square){
-    return {
-        square: square,
-        side: match.me.side
+    var m = {
+        square: square
     }
+    console.log(m);
+    return m;
+};
+
+var updateView = function(match){
+    var squares = match.board.split('');
+    console.log(squares);
+    squares.forEach(function(value, index){
+        $('.square:eq('+index+')').text(value);
+    });
 };
 
 var makeMove = function(square){
@@ -10,7 +19,7 @@ var makeMove = function(square){
         .send(move(square))
         .set('Accept', 'application/json')
         .end(function(err, res){
-            console.log('made request');
+            updateView(res.body);
         });
 };
 
