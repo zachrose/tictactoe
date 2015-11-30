@@ -51,14 +51,19 @@ app.get('/matches/:id', function(req, res){
 });
 
 app.patch('/matches/:id', function(req, res){
-    var player = req.sessionID;
-    var id = req.params.id;
-    var match = matches.find(id);
-    var side = determineSide(player, match);
-    if(!match) return res.status(404).send({ message: "No such game" });
-    if(!side) return res.status(401).send({ message: "Not your game" });
-    var move = _.extend(req.body, { side: side });
-    var match = matches.makeMove(id, move);
+    try{
+        var player = req.sessionID;
+        var id = req.params.id;
+        var match = matches.find(id);
+        var side = determineSide(player, match);
+        var move = _.extend(req.body, { side: side });
+        var match = matches.makeMove(id, move);
+    }catch(e){
+        var theirs = (e.name === 'PlayerError');
+        var status = theirs ? 400 : 500;
+        var message = theirs ? e.message : "Internal error";
+        return res.status(status).send({ message: message });
+    }
     res.format({
         json: function(){
             res.send(match);
