@@ -14,6 +14,10 @@ describe("TictactoeGame", function(){
             game.move('x', 3)
                 .board.should.equal('___x_____');
         });
+        it("accepts moves as objects", function(){
+            game.move({ side: 'x', square: 3})
+                .board.should.equal('___x_____');
+        });
         it("returns another game object for chaining", function(){
             game
                 .move('x', 3)
