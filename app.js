@@ -17,14 +17,9 @@ app.use(session({
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+var determineSide = require('./lib/side');
 var matches = require('./lib/matches');
 var present = require('./lib/presenter');
-
-var determineSide = function(player, match){
-    if(!match) return;
-    if(player == match.player_x) return 'x';
-    if(player == match.player_o) return 'o';
-};
 
 app.post('/matches', function(req, res){
     var player = req.sessionID;
