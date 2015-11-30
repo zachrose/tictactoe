@@ -11,13 +11,20 @@ describe("TictactoeGame", function(){
             game.board.should.equal('_________');
         });
         it("accepts a valid move from 'x'", function(){
-            game.move('x', 3);
-            game.board.should.equal('___x_____');
+            game.move('x', 3)
+                .board.should.equal('___x_____');
+        });
+        it("returns another game object for chaining", function(){
+            game
+                .move('x', 3)
+                .move('o', 4)
+                .board.should.equal('___xo____');
         });
         it("accepts a valid move from 'o'", function(){
-            game.move('x', 3);
-            game.move('o', 4);
-            game.board.should.equal('___xo____');
+            game
+                .move('x', 3)
+                .move('o', 4)
+                .board.should.equal('___xo____');
         });
     });
     describe("validation", function(){
@@ -29,14 +36,14 @@ describe("TictactoeGame", function(){
         });
         it("rejects consecutive moves from 'x'", function(){
             var msg = "Invalid move, not your turn";
-            game.move('x', 3);
+            game = game.move('x', 3);
             (function(){
                 game.move('x', 4);
             }).should.throw(msg);
         });
         it("rejects moves into non-empty squares", function(){
             var msg = "Invalid move, square not empty";
-            game.move('x', 3);
+            game = game.move('x', 3);
             (function(){
                 game.move('o', 3);
             }).should.throw(msg);
@@ -50,29 +57,29 @@ describe("TictactoeGame", function(){
     });
     describe("winning", function(){
         it("can be won with a horizontal row", function(){
-            game.jumpTo('xx_oo____');
-            game.move('x', 2);
-            game.winner.should.equal('x');
+            new TictactoeGame('xx_oo____')
+                .move('x', 2)
+                .winner.should.equal('x')
         });
         it("can be won with a vertical row", function(){
-            game.jumpTo('xo_xo____');
-            game.move('x', 6);
-            game.winner.should.equal('x');
+            new TictactoeGame('xo_xo____')
+                .move('x', 6)
+                .winner.should.equal('x');
         });
         it("can be won with a diagonal row", function(){
-            game.jumpTo('xo_ox____');
-            game.move('x', 8);
-            game.winner.should.equal('x');
+            new TictactoeGame('xo_ox____')
+                .move('x', 8)
+                .winner.should.equal('x');
         });
         it("can be won by 'o'", function(){
-            game.jumpTo('xx_oo__x_');
-            game.move('o', 5);
-            game.winner.should.equal('o');
+            new TictactoeGame('xx_oo__x_')
+                .move('o', 5)
+                .winner.should.equal('o');
         });
         it("rejects additional moves after a win", function(){
             var msg = "Invalid move, game already won";
-            game.jumpTo('xx_oo____');
-            game.move('x', 2);
+            var game = new TictactoeGame('xx_oo____')
+                .move('x', 2);
             game.move.bind(game, 'o', 5).should.throw(msg);
         });
     });
