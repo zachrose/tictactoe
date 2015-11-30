@@ -81,7 +81,7 @@ describe("TictactoeGame", function(){
                 .winner.should.equal('o');
         });
         it("rejects additional moves after a win", function(){
-            var msg = "Invalid move, game already won";
+            var msg = "Invalid move, game already over";
             var game = new TictactoeGame('xx_oo____')
                 .move('x', 2);
             game.move.bind(game, 'o', 5).should.throw(msg);
