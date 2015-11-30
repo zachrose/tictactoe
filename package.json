@@ -16,8 +16,5 @@
     "mocha": "^2.3.4",
     "should": "^7.1.1",
     "underscore": "^1.8.3"
-  },
-  "devDependencies": {
-    "node-pg-migrate": "0.0.9"
   }
 }
