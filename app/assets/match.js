@@ -2,6 +2,8 @@
    Stupid implementation while we sort out the API
    :-P
 */
+var superagent = require('superagent');
+var $ = require('jquery');
 
 var move = function(square){
     var m = {
