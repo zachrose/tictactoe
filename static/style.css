@@ -4,5 +4,55 @@ html, body {
 }
 
 body {
-    margin: 1em;
+    pointer-events: none;
+    transform-style: preserve-3d;
+    perspective: 9000px;
+    -webkit-transform-style: preserve-3d;
+    -webkit-perspective: 9000px;
+}
+
+nav {
+    display: none;
+}
+
+#board {
+    width: 50%;
+    border: 3px solid #ccc;
+    animation: spin 27s linear infinite;
+    pointer-events: auto;
+    overflow: auto;
+}
+
+#board:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+
+@keyframes spin {
+    from {
+        transform: rotateX(60deg) rotateZ(45deg);
+   } 
+    to {
+        transform: rotateX(60deg) rotateZ(405deg);
+   } 
+}
+
+.square {
+    width: 33%;
+    height: 40px;
+    border: 3px solid #ccc;
+    float: left;
+    line-height: 6em;
+    text-align: center;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.square.x {
+    background: #FCC;
+}
+
+.square.o {
+    background: #CCF;
 }
