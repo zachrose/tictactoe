@@ -3,31 +3,66 @@ html, body {
     padding: 0;
 }
 
+html {
+    height: 100%;
+    font-family: "Helvetica";
+    color: white;
+}
+
 body {
     pointer-events: none;
     transform-style: preserve-3d;
+    min-height: 100%;
     perspective: 9000px;
     -webkit-transform-style: preserve-3d;
     -webkit-perspective: 9000px;
+    background: #627d4d;
+    background: linear-gradient(to bottom, #fff, #000);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background: black;
 }
 
 nav {
     display: none;
 }
 
+h1 {
+    position: absolute;
+    top: 50%;
+    margin-top: 200px;
+    width: 100%;
+    text-align: center;
+    font-size: 10px;
+    text-transform: uppercase;
+}
+
+#error {
+    position: absolute;
+    top: 50%;
+    margin-top: -200px;
+    width: 100%;
+    text-align: center;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: red;
+}
+
 #board {
-    width: 50%;
-    border: 3px solid #ccc;
-    animation: spin 27s linear infinite;
+    position: absolute;
+    width:  306px;
+    height: 306px;
+    outline: 1px solid gray;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    animation: spin 300s linear infinite;
     pointer-events: auto;
     overflow: auto;
 }
 
-#board:after {
-    content: "";
-    display: block;
-    padding-bottom: 100%;
-}
 
 @keyframes spin {
     from {
@@ -39,20 +74,25 @@ nav {
 }
 
 .square {
-    width: 33%;
-    height: 40px;
-    border: 3px solid #ccc;
+    width: 100px;
+    height: 100px;
+    border: 1px solid gray;
     float: left;
     line-height: 6em;
     text-align: center;
     cursor: pointer;
+    overflow: hidden;
+    text-indent: -300px;
     pointer-events: auto;
+    // image-rendering: pixelated;
+    -webkit-backface-visibility: hidden;
+    background-size: 100% 100%;
 }
 
 .square.x {
-    background: #FCC;
+    background-image: url(/x.png);
 }
 
 .square.o {
-    background: #CCF;
+    background-image: url(/o.png);
 }
