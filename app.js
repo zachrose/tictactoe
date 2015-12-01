@@ -3,6 +3,7 @@ var _ = require('underscore');
 var express = require('express');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var expressWs = require('express-ws');
 var app = express();
 
 app.use(bodyParser.json());
@@ -14,12 +15,15 @@ app.use(session({
     name: 'session-id'
 }));
 
+expressWs(app);
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 var determineSide = require('./lib/side');
 var matches = require('./lib/matches');
 var present = require('./lib/presenter');
+var bus = require('./lib/bus');
 
 app.all('/matches*', function(req, res, next){
     res.represent = function(match, player){
@@ -49,6 +53,15 @@ app.get('/matches/:id', function(req, res){
     res.represent(match, player);
 });
 
+app.ws('/matches/:id', function(ws, req, next){
+    bus.on(req.params.id, function(event){
+        try{
+            ws.send(JSON.stringify(event));
+        }catch(e){ /* ignore */ }
+    });
+    next();
+});
+
 app.patch('/matches/:id', function(req, res){
     try{
         var player = req.sessionID;
@@ -61,8 +74,13 @@ app.patch('/matches/:id', function(req, res){
         var theirs = (e.name === 'PlayerError');
         var status = theirs ? 400 : 500;
         var message = theirs ? e.message : "Internal error";
-        return res.status(status).send({ message: message });
+        res.status(status).send({ message: message });
+        return;
     }
+    bus.trigger(id, {
+        type: 'move',
+        payload: move
+    });
     res.represent(match, player);
 });
 
