@@ -1,11 +1,14 @@
 extends layout
 
+block side
+    h1= 'You are side '+side
+
 block json
-    script!= 'window.match = '+json
+    script!= 'window.initialState = '+json
 
 block board
     div#board
         each square, index in board
-            div(id='s#{index}', class='square')= square
+            div(id='s#{index}', class='square #{square}', onclick='makeMove(#{index})')= square
     
 

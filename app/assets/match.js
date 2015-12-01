@@ -3,47 +3,62 @@
    :-P
 */
 var superagent = require('superagent');
+var Game = require('../../lib/tictactoe_game');
 var $ = require('jquery');
+var redux = require('redux');
 
-var updateView = function(_match){
-    var squares = _match.board.split('');
-    squares.forEach(function(value, index){
-        $('.square:eq('+index+')').text(value);
-    });
+var reducer = function(state, action){
+    if(!state) return {
+        board: '_________',
+        winner: null
+    };
+    return new Game(state.board).move(action.payload);
+};
+
+window.store = redux.createStore(reducer);
+
+store.subscribe(function(){
+    render(store.getState());
+});
+
+var render = function(state){
+    var square = function(side, index){
+        if(side == '_') side = '';
+        return "<div id='s"+index+"' class='square "+side+"' onclick='makeMove("+index+")'>"+side+"</div>";
+    };
+    var board = state.board.split('').map(square);
+    $('#board').html(board);
 };
 
 var handleError = function(err, res){
+    if(!err) return;
     if(res && res.body && res.body.message){
-        $('#error').text(res.body.message);
-    }else{
-        console.error(err);
+        return $('#error').text(res.body.message);
     }
+    console.error(err);
 };
 
-var makeMove = function(square){
-    superagent.patch('/matches/'+match.id)
+window.makeMove = function(square){
+    superagent.patch('/matches/'+initialState.id)
         .send({square: square})
         .set('Accept', 'application/json')
         .end(handleError);
 };
 
-var parse = function(event){
-    var data = JSON.parse(event.data);
-    var type = data.type;
-    var payload = data.payload;
+var parse = function(eventData){
+    var event = JSON.parse(eventData);
     var handlers = {
-        move: function(payload){
-            var index = payload.square;
-            var value = payload.side;
-            $('.square:eq('+index+')').text(value);
+        move: function(move){
+            console.log('dispatching', move);
+            store.dispatch({type: 'move', payload: move});
         }
     }
-    handlers[type](payload);
+    handlers[event.type](event.payload);
 };
 
 var connect = function(){
     var host = window.location.host;
-    var matchId = window.match.id;
+    var matchId = window.initialState.id;
     var wsUrl = "ws://"+host+"/matches/"+matchId;
     var ws = new WebSocket(wsUrl);
     ws.onerror = function(){
@@ -53,14 +68,12 @@ var connect = function(){
         console.log('websocket is open');
     };
     ws.onmessage = function(event){
-        parse(event);
+        console.log('fucka', event);
+        parse(event.data);
     };
 };
 
 $(document).ready(function(){
     connect();
-    $('.square').click(function(){
-        var square = this.id.split('s')[1];
-        makeMove(square);
-    });
 });
+
