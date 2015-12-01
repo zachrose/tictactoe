@@ -5,13 +5,6 @@
 var superagent = require('superagent');
 var $ = require('jquery');
 
-var move = function(square){
-    var m = {
-        square: square
-    }
-    return m;
-};
-
 var updateView = function(_match){
     var squares = _match.board.split('');
     squares.forEach(function(value, index){
@@ -19,13 +12,19 @@ var updateView = function(_match){
     });
 };
 
+var handleError = function(err, res){
+    if(res && res.body && res.body.message){
+        $('#error').text(res.body.message);
+    }else{
+        console.error(err);
+    }
+};
+
 var makeMove = function(square){
     superagent.patch('/matches/'+match.id)
-        .send(move(square))
+        .send({square: square})
         .set('Accept', 'application/json')
-        .end(function(err, res){
-            updateView(res.body);
-        });
+        .end(handleError);
 };
 
 var parse = function(event){
