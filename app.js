@@ -57,7 +57,9 @@ app.ws('/matches/:id', function(ws, req, next){
     bus.on(req.params.id, function(event){
         try{
             ws.send(JSON.stringify(event));
-        }catch(e){ /* ignore */ }
+        }catch(e){
+            /* ignore. maybe nobody is listening */
+        }
     });
     next();
 });
