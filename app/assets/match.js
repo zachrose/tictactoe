@@ -31,11 +31,9 @@ var render = function(state){
 };
 
 var handleError = function(err, res){
-    if(!err) return;
     if(res && res.body && res.body.message){
-        return $('#error').text(res.body.message);
+        $('#error').text(res.body.message);
     }
-    console.error(err);
 };
 
 window.makeMove = function(square){
@@ -45,8 +43,8 @@ window.makeMove = function(square){
         .end(handleError);
 };
 
-var parse = function(eventData){
-    var event = JSON.parse(eventData);
+var parse = function(event){
+    var event = JSON.parse(event.data);
     var handlers = {
         move: function(move){
             console.log('dispatching', move);
@@ -57,23 +55,10 @@ var parse = function(eventData){
 };
 
 var connect = function(){
-    var host = window.location.host;
-    var matchId = window.initialState.id;
-    var wsUrl = "ws://"+host+"/matches/"+matchId;
+    var wsUrl = "ws://"+location.host+"/matches/"+initialState.id;
     var ws = new WebSocket(wsUrl);
-    ws.onerror = function(){
-        console.log('websocket error');
-    };
-    ws.onopen = function(){
-        console.log('websocket is open');
-    };
-    ws.onmessage = function(event){
-        console.log('fucka', event);
-        parse(event.data);
-    };
+    ws.onmessage = parse;
 };
 
-$(document).ready(function(){
-    connect();
-});
+$(document).ready(connect);
 
