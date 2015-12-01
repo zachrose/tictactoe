@@ -20,10 +20,10 @@ expressWs(app);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-var determineSide = require('./lib/side');
-var matches = require('./lib/matches');
-var present = require('./lib/presenter');
-var bus = require('./lib/bus');
+var determineSide = require('../lib/side');
+var matches = require('../lib/matches');
+var present = require('../lib/presenter');
+var bus = require('../lib/bus');
 
 app.all('/matches*', function(req, res, next){
     res.represent = function(match, player){
